@@ -19,9 +19,12 @@ Supported: macOS (`afplay` + `osascript`), Windows (`SoundPlayer` + WinRT Toast)
 **Recommended — symlink into user plugins (auto-trusted, live edits):**
 
 ```bash
+git clone git@github.com:FireTable/grok-notify.git
 mkdir -p ~/.grok/plugins
-ln -sfn /Users/FireTable/OpenClaw/Code/grok-notify ~/.grok/plugins/grok-notify
+ln -sfn "$(pwd)/grok-notify" ~/.grok/plugins/grok-notify
 ```
+
+If the repo is already checked out, `ln -sfn "$(pwd)" ~/.grok/plugins/grok-notify` from inside it.
 
 Then restart Grok, or press `r` in `/hooks`. Confirm the plugin appears under Plugin hooks.
 
@@ -29,7 +32,7 @@ Then restart Grok, or press `r` in `/hooks`. Confirm the plugin appears under Pl
 
 ```bash
 mkdir -p ~/.grok/plugins
-cp -R /Users/FireTable/OpenClaw/Code/grok-notify ~/.grok/plugins/grok-notify
+cp -R grok-notify ~/.grok/plugins/grok-notify
 ```
 
 Re-copy after source edits.
