@@ -1,0 +1,10 @@
+{
+  "name": "grok-notify",
+  "version": "0.1.0",
+  "description": "Play a sound + send an OS notification when Grok finishes a turn or needs human input. macOS and Windows. Zero dependencies.",
+  "author": {
+    "name": "grok-notify"
+  },
+  "license": "MIT",
+  "keywords": ["hooks", "notification", "sound", "ux"]
+}
