@@ -45,12 +45,23 @@ if [[ -z "$SCENARIO" ]]; then
     exit 0
 fi
 
+# Skip when launched from inside Cindy: Cindy orchestrates multiple agents and shows its own status, no need for OS notification + sound.
+[[ "${CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST:-0}" == "1" || "${__CFBundleIdentifier:-}" == "com.xd.cindycn" ]] && exit 0
+
 UNAME=$(uname -s)
 
 notify_macos() {
+    # ponytail: afplay lives in play_sequence now; this fn only fires the OS notification.
     local sound="$1" title="$2" msg="$3"
-    afplay -v 2.0 "$sound" &>/dev/null &
     osascript -e "display notification \"$msg\" with title \"$title\"" &>/dev/null &
+}
+
+# Layered 2-note sequence for brand-distinctive Grok chime (downward for complete, sonar-then-ping for input).
+# ponytail: 2 layered system sounds beats 1 custom file; add per-agent .aiff when these still sound alike.
+play_sequence() {
+    local s1="$1" gap="$2" s2="$3"
+    afplay -v 2.0 "$s1" &>/dev/null &
+    ( sleep "$gap"; afplay -v 2.0 "$s2" &>/dev/null ) &
 }
 
 notify_windows() {
@@ -69,9 +80,11 @@ notify_windows() {
 case "$UNAME" in
     Darwin)
         if [[ "$SCENARIO" == "task_complete" ]]; then
-            notify_macos "/System/Library/Sounds/Glass.aiff" "Grok" "Task complete"
+            play_sequence "/System/Library/Sounds/Sosumi.aiff" 0.25 "/System/Library/Sounds/Glass.aiff"
+            notify_macos "" "Grok" "Task complete"
         else
-            notify_macos "/System/Library/Sounds/Tink.aiff" "Grok" "Needs your input"
+            play_sequence "/System/Library/Sounds/Submarine.aiff" 0.20 "/System/Library/Sounds/Tink.aiff"
+            notify_macos "" "Grok" "Needs your input"
         fi
         ;;
     MINGW*|CYGWIN*|MSYS*)
